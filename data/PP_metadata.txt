@@ -1,4 +1,4 @@
-PP_ID	Status	RNA Extraction	Library Preparation
+PP_ID	Status	RNA_extraction	Library_preparation
 PP002	HD	batch 1	batch 1
 PP003	HD	batch 1	batch 1
 PP004	HD	batch 1	batch 1
