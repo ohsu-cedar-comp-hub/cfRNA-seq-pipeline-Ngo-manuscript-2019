@@ -13,10 +13,6 @@ project_id = config["project_id"]
 
 SAMPLES, = glob_wildcards("samples/raw/{sample}_R1.fq")
 
-md = pd.read_table(config["omic_meta_data"], index_col="PP_ID",dtype=str)
-condition = config["linear_model"]
-baseline = config["TE_baseline"]
-
 # Extensions used in rule all
 ext = ['r','R1.pdf','R2.pdf','xls']
 fastq_ext = ['R1','R2']
@@ -25,7 +21,6 @@ insertion_and_clipping_prof_ext = ['r','R1.pdf','R2.pdf','xls']
 inner_distance_ext = ['_freq.txt','_plot.pdf','_plot.r','.txt']
 read_dist_ext = ['txt']
 read_gc_ext = ['.xls','_plot.r','_plot.pdf']
-
 
 with open('cluster.json') as json_file:
     json_dict = json.load(json_file)
@@ -38,27 +33,16 @@ for rule in rule_dirs:
         os.makedirs(log_out)
         print(log_out)
 
-
-result_dirs = ['diffexp','tables']
-for rule in result_dirs:
-    if not os.path.exists(os.path.join(os.getcwd(),'results',rule)):
-        log_out = os.path.join(os.getcwd(), 'results', rule)
-        os.makedirs(log_out)
-        print(log_out)
-
 def message(mes):
     sys.stderr.write("|--- " + mes + "\n")
-
 
 def get_deseq2_threads(wildcards=None):
     few_coeffs = False if wildcards is None else len(get_contrast(wildcards)) < 10
     return 1 if len(config["omic_meta_data"]) < 100 or few_coeffs else 6
 
-
 def get_contrast(wildcards):
     """Return each contrast provided in the configuration file"""
     return config["diffexp"]["contrasts"][wildcards.contrast]
-
 
 for sample in SAMPLES:
     message("Sample " + sample + " will be processed")
