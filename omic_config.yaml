@@ -1,0 +1,125 @@
+##############################################################################
+# Genome and project-specific files that will change from project-to-project
+##############################################################################
+
+# GTF file for the genome build you would like to use
+gtf_file:
+  /home/exacloud/lustre1/CEDAR/anurpa/genomes/gencode.v27.annotation.gtf
+# Bed file for rseqc function read_distribution
+bed_file:
+  /home/exacloud/lustre1/CEDAR/roskamsh/projects/Omics-QC-pipeline/data/gencode_v27.bed
+# Pre-built star indexes for hg38
+star_index:
+  /home/exacloud/lustre1/CEDAR/anurpa/genomes/
+exon_gtf:
+  /home/exacloud/lustre1/CEDAR/anurpa/genomes/gencode.housekeeping_genes.exon.gtf
+TE_gtf:
+  /home/groups/CEDAR/anno/gtf/hg38_rmsk_TE.gtf
+genome:
+  /home/exacloud/lustre1/CEDAR/anurpa/genomes/GRCh38.primary_assembly.genome.fa
+ens2geneID:
+  /home/groups/CEDAR/roskamsh/projects/cfRNA-seq-pipeline/data/biomart_ensembl_geneid.txt
+
+####################################################################
+# Tool-specific files that will not change from project-to-project
+####################################################################
+
+# Pre-built genome indexes for various organisms which we will screen against to look for contamination
+conf:
+  /home/groups/CEDAR/tools/FastQ_Screen_Genomes/fastq_screen.conf
+# Paths to various tools which are used in this pipeline
+star_tool:
+  /home/exacloud/lustre1/CEDAR/tools/STAR/tags/2.5.3a/bin/Linux_x86_64/STAR
+sickle_tool:
+  /home/groups/CEDAR/tools/sickle
+picard_tool:
+  /home/groups/CEDAR/tools/picard-tools-1.119/MarkDuplicates.jar
+bamstats_tool:
+  /home/groups/CEDAR/roskamsh/tools/bamstats_bin/bamstats
+
+##########################################
+# Important project-specific paths/files
+##########################################
+
+# Metadata needed for differential expression analysis
+omic_meta_data:
+  /home/groups/CEDAR/roskamsh/projects/cfRNA-seq-pipeline/data/PP_metadata_keep_FINAL_updated.txt
+#  /home/groups/CEDAR/roskamsh/projects/cfRNA-seq-pipeline/data/PP_metadata_final.txt
+
+#############################################################################################
+# Project-specific specifications you will need to make prior to submission of the pipeline
+#############################################################################################
+
+project_id:
+  PP_cohort_Run3
+assembly:
+  hg38.90
+TE_baseline:
+  HD
+# option to print GO term tree (0/1)
+printTree:
+  1
+# fold change cutoff (not log2 transformed) for GO analysis and volcano pot
+FC:
+  2
+# FDR adjusted p-value cutoff for GO analysis and volcano plot
+adjp:
+  0.01
+# The column name of the characteristic you would like to do DE on. Example: Diagnosis, genotype, etc. This must be a column in your omic_meta_data. 
+linear_model:
+  Status
+seq_layout:
+  PE
+sample_id:
+  PP_ID
+meta_columns_to_plot:
+  Status: Status
+  Lib_Conc: Lib_Conc
+diffexp:
+  # contrasts for the deseq2 results method
+  contrasts:
+    LuCa-vs-HD:
+      - LuCa
+      - HD
+    HCC-vs-HD:
+      - HCC
+      - HD
+    Cirr-vs-HD:
+      - Cirr
+      - HD
+    MM-vs-HD:
+      - MM
+      - HD
+    MGUS-vs-HD:
+      - MGUS
+      - HD
+    LuCa-vs-MM:
+      - LuCa
+      - MM
+    MM-vs-HCC:
+      - MM
+      - HCC
+    LuCa-vs-HCC:
+      - LuCa
+      - HCC
+  LRT:
+    - HD
+    - LuCa
+    - MM
+    - MGUS
+    - HCC
+    - Cirr
+pca:
+  labels:
+    # columns of sample sheet to use for PCA
+    - Status
+# If you would like to colour your QC plots by an RColorBrewer palette, list that palette under the rcolorbrewer parameter, otherwise, write "NA"
+# If you would like to colour your QC plots by specific colours, please list them under the discrete category, with one colour for each bullet point
+## The discrete colours will be assigned to your Conditions (ie. linear_model) in the order that they show up in your metadata table, when it is ordered alphabetically by sample ID
+## There must be the same number of colours listed as there are Conditions
+# If no options are specified, the default ggplot2 colours are used
+colors:
+  rcolorbrewer:
+    - Paired
+  discrete:
+    - NA

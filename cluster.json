@@ -1,0 +1,273 @@
+{
+    "__default__" :
+    {
+        "t" : "35:00:00",
+        "N" : 1,
+        "partition" : "exacloud",
+        "J" : "{rule}.{wildcards}",
+        "o" : "logs/__default__/{wildcards}_{rule}%j.out",
+        "e" : "logs/__default__/{wildcards}_{rule}%j.err",
+        "c" : 4,
+        "mem" : 45000
+    },
+    "trimming" :
+    {
+        "J" : "trimming",
+        "e" : "logs/trimming/trimming_%j.err",
+        "o" : "logs/trimming/trimming_%j.out",
+        "c" : 1,
+        "mem" : 54000
+    },
+    "fastqc" :
+    {
+        "J" : "fastqc",
+        "e" : "logs/fastqc/fastqc_%j.err",
+        "o" : "logs/fastqc/fastqc_%j.out",
+        "c" : 6,
+        "mem":40000
+    },
+    "fastqscreen" :
+    {
+        "J" : "fastqscreen",
+        "e" : "logs/fastqscreen/fastqscreen_%j.err",
+        "o" : "logs/fastqscreen/fastqscreen_%j.out",
+        "c" : 6,
+        "mem":40000
+    },
+    "star" :
+    {
+        "J" : "star",
+        "e" : "logs/star/star%j.err",
+        "o" : "logs/star/star%j.out",
+        "c" : 12,
+        "mem" : 64000
+    },
+    "star_statistics" :
+    {
+        "J" : "star_statistics",
+        "e" : "logs/star_statistics/star_statistics_%j.err",
+        "o" : "logs/star_statistics/star_statistics_%j.out",
+        "c" : 1,
+        "mem":5000
+    },
+    "picard" :
+    {
+        "J" : "picard",
+        "e" : "logs/picard/picard_%j.err",
+        "o" : "logs/picard/picard_%j.out",
+        "c" : 1,
+        "mem" : 45000
+    },
+    "index" :
+    {
+        "J" : "index",
+        "e" : "logs/index/index%j.err",
+        "o" : "logs/index/index%j.out",
+        "c" : 1,
+        "mem" : 45000
+    },
+    "sort" :
+    {
+        "J" : "sort",
+        "e" : "logs/sort/sort_%j.err",
+        "o" : "logs/sort/sort_%j.out",
+        "c" : 1,
+        "mem" : 54000
+    },
+    "samtools_stats" :
+    {
+        "J" : "samtools_stats",
+        "e" : "logs/samtools_stats/samtools_stats_%j.err",
+        "o" : "logs/samtools_stats/samtools_stats_%j.out",
+        "c" : 1,
+        "mem" : 54000
+    },
+    "genecount" :
+    {
+        "J" : "genecount",
+        "e" : "logs/genecount/genecount_%j.err",
+        "o" : "logs/genecount/genecount_%j.out",
+        "c" : 1,
+        "mem" : 54000
+    },
+    "count_exons" :
+    {
+        "J" : "count_exons",
+        "e" : "logs/count_exons/count_exons_%j.err",
+        "o" : "logs/count_exons/count_exons_%j.out",
+        "c" : 1,
+        "mem" : 54000
+    },
+    "compile_counts" :
+    {
+        "J" : "compile_counts",
+        "e" : "logs/compile_counts/compile_counts_%j.err",
+        "o" : "logs/compile_counts/compile_counts_%j.out",
+        "c" : 1,
+        "mem":5000
+    },
+    "compile_counts_and_stats" :
+    {
+        "J" : "compile_counts_and_stats",
+        "e" : "logs/compile_counts/compile_counts_and_stats_%j.err",
+        "o" : "logs/compile_counts/compile_counts_and_stats_%j.out",
+        "c" : 1,
+        "mem":5000
+    },
+    "compile_exon_counts" :
+    {
+        "J" : "compile_exon_counts",
+        "e" : "logs/compile_exon_counts/compile_exon_counts_%j.err",
+        "o" : "logs/compile_exon_counts/compile_exon_counts_%j.out",
+        "c" : 1,
+        "mem":5000
+    },
+    "insertion_profile" :
+    { 
+        "J" : "insertion_profile",
+        "e" : "logs/insertion_profile/insertion_profile_%j.err",
+        "o" : "logs/insertion_profile/insertion_profile_%j.out",
+        "c" : 1,
+        "mem":10000
+    },
+    "inner_distance" :
+    {
+        "J" : "inner_distance",
+        "e" : "logs/inner_distance/inner_distance_%j.err",
+        "o" : "logs/inner_distance/inner_distance_%j.out",
+        "c" : 1,
+        "mem":10000
+    },
+    "clipping_profile" :
+    {
+        "J" : "clipping_profile",
+        "e" : "logs/clipping_profile/clipping_profile_%j.err",
+        "o" : "logs/clipping_profile/clipping_profile_%j.out",
+        "c" : 1,
+        "mem":10000
+    },
+    "read_distribution" :
+    {
+        "J" : "read_distribution",
+        "e" : "logs/read_distribution/read_distribution_%j.err",
+        "o" : "logs/read_distribution/read_distribution_%j.out",
+        "c" : 1,
+        "mem":10000
+    },
+    "compile_rd" :
+    {
+        "J" : "compile_rd",
+        "e" : "logs/compile_rd/compile_rd_%j.err",
+        "o" : "logs/compile_rd/compile_rd_%j.out",
+        "c" : 1,
+        "mem":5400
+    },
+    "read_GC" :
+    {
+        "J" : "read_GC",
+        "e" : "logs/read_GC/read_GC_%j.err",
+        "o" : "logs/read_GC/read_GC_%j.out",
+        "c" : 1,
+        "mem":10000
+    },
+    "map_TE" :
+    {
+        "J" : "map_TE",
+        "e" : "logs/map_TE/map_TE%j.err",
+        "o" : "logs/map_TE/map_TE%j.out",
+        "c" : 12,
+        "mem" : 64000
+    },
+    "TEtranscripts" :
+    {
+        "J" : "TEtranscripts",
+        "e" : "logs/TEtranscripts/TEtranscripts_%j.err",
+        "o" : "logs/TEtranscripts/TEtranscripts_%j.out",
+        "c" : 8,
+        "mem":80000
+    },
+    "deseq2_init" :
+    {
+        "J" : "deseq2_init",
+        "e" : "logs/deseq2_init/deseq2_init_%j.err",
+        "o" : "logs/deseq2_init/deseq2_init_%j.out",
+        "c" : 8,
+        "mem" : 80000
+    },
+    "deseq2_pairwise" :
+    {
+        "J" : "deseq2_pairwise",
+        "e" : "logs/deseq2_pairwise/deseq2_pairwise_%j.err",
+        "o" : "logs/deseq2_pairwise/deseq2_pairwise_%j.out",
+        "c" : 4,
+        "mem":80000
+    },
+    "deseq2_group" :
+    {
+        "J" : "deseq2_group",
+        "e" : "logs/deseq2_group/deseq2_group_%j.err",
+        "o" : "logs/deseq2_group/deseq2_group_%j.out",
+        "mem" : 30000
+    },
+    "deseq2_QC" :
+    {
+        "J" : "deseq2_QC",
+        "e" : "logs/deseq2_QC/deseq2_QC_%j.err",
+        "o" : "logs/deseq2_QC/deseq2_QC_%j.out",
+        "mem" : 30000
+    },
+    "deseq2_qplot" :
+    {
+        "J" : "deseq2_qplot",
+        "e" : "logs/deseq2_qplot/deseq2_qplot_%j.err",
+        "o" : "logs/deseq2_qplot/deseq2_qplot_%j.out",
+        "mem" : 30000
+    },
+    "deseq2_density" :
+    {
+        "J" : "deseq2_density",
+        "e" : "logs/deseq2_density/deseq2_density_%j.err",
+        "o" : "logs/deseq2_density/deseq2_density_%j.out",
+        "mem" : 30000
+    },
+    "GO" :
+    {
+        "J" : "GO",
+        "e" : "logs/GO/GO%j.err",
+        "o" : "logs/GO/GO%j.out",
+        "c" : 6,
+        "mem" : 64000
+    },
+    "volcano" :
+    {
+        "J" : "volcano",
+        "e" : "logs/volcano/volcano%j.err",
+        "o" : "logs/volcano/volcano%j.out",
+        "c" : 1,
+        "mem" : 5400
+    },
+    "permutation" :
+    {
+        "J" : "permutation",
+        "e" : "logs/permutation/permutation%j.err",
+        "o" : "logs/permutation/permutation%j.out",
+        "c" : 12,
+        "mem" : 80000
+    },
+    "run_glimma" :
+    {
+        "J" : "run_glimma",
+        "e" : "logs/run_glimma/run_glimma%j.err",
+        "o" : "logs/run_glimma/run_glimma_%j.out",
+        "c" : 1,
+        "mem" : 10000
+    },
+    "run_glimma_mds" :
+    {
+        "J" : "run_glimma_mds",
+        "e" : "logs/run_glimma_mds/run_glimma_mds%j.err",
+        "o" : "logs/run_glimma_mds/run_glimma_mds%j.out",
+        "c" : 1,
+        "mem" : 10000
+    }
+}
