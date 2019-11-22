@@ -1,18 +1,11 @@
 cfRNA-seq Pipeline
 ======================
 
-Pipeline to assess quality of Omics datasets, specifically tailored towards cell-free RNA.
+Pipeline to process raw fastq files for Thuy Ngo's manuscript: "Plasma cell-free RNA profiling enables pan-cancer detection and distinguishes cancer from pre-malignant conditions"
 
 This is a package of Python and R scripts that enable reading, processing and analysis of cfRNA Omics' datasets. 
 This package implements the Snakemake management workflow system and is currently implemented to work with 
 the cluster management and job scheduling system SLURM. This snakemake workflow utilizes conda installations to download and use packages for further analysis, so please ensure that you have installed miniconda prior to use.
-
-Questions/issues
-======================
-
-Please add an issue to the cfRNA-seq repository. We would appreciate if your issue included sample code/files 
-(as appropriate) so that we can reproduce your bug/issue. 
-
 
 Contributing
 ======================
@@ -26,81 +19,59 @@ We welcome contributors! For your pull requests, please include the following:
 Use
 ======================
 
-Locate raw files:
-* After sequencing, your raw fastq files are placed in `/path/to/sequencing/files`.
+This pipeline implements the sickle trimming tool, which requires unzipped fastq files. Please unzip all fastq files before launching this workflow.
 
 ```
-$ cd /path/to/raw/data
-$ ls -alh
-```
-
-Check md5sum.
-
-```
-$ md5sum –c md5sum.txt > md5sum_out.txt
-```
-
-Move your files into the archive to be stored.
-
-```
-$ mv /path/to/raw/data /path/to/archive
-```
-
-Check md5sum again to ensure your sequencing files are not corrupted.
-
-```
-$ md5sum –c md5sum.txt > md5sum_out.txt
-```
-
-Unzip all fastq files.
-
-```
-$ gunzip –d sample.fastq.gz
-$ ctrl+z
-$ bg
+$ gunzip *.fastq.gz
 ```
 
 Clone the Omics-QC Pipeline into your working directory.
 
 ```
-$ git clone https://github.com/ohsu-cedar-comp-hub/Omics-QC-pipeline.git
+$ git clone https://github.com/ohsu-cedar-comp-hub/cfRNA-seq-pipeline-Ngo-manuscript-2019.git
 ```
 
-Create a `samples/raw` directory, a `logs` directory and a `data` directory (if they do not exist) in your `wdir()`.
+Symbollically link all unzipped fastq files to the `cfRNA-seq-pipeline-Ngo-manuscript-2019/samples/raw` directory using a bash script loop in your terminal. This loop also names them such that they end with `.fq`, which is necessary for proper execution of this workflow.
 
 ```
-$ mkdir logs
-$ mkdir data
-$ mkdir samples
-$ cd samples
-$ mkdir raw
-```
-
-Symbollically link the fastq files of your samples to the `wdir/samples/raw` directory using a bash script loop in your terminal.
-
-```
-$ ls -1 /path/to/data/LIB*R1*fastq | while read fastq; do
-    R1=$( basename $fastq | cut -d _ -f 2 | awk '{print $1"_R1.fq"}' )
-    R2=$( basename $fastq | cut -d _ -f 2 | awk '{print $1"_R2.fq"}' )
+$ ls -1 /path/to/data/*fastq | while read fastq; do
+    R1=$( basename $fastq | cut -d _ -f 1 | awk '{print $1"_R1.fq"}' )
+    R2=$( basename $fastq | cut -d _ -f 1 | awk '{print $1"_R2.fq"}' )
     echo $R1 : $R2
     ln -s $fastq ./$R1
-    ln -s ${fastq%R1_001.fastq}R2_001.fastq ./$R2
+    ln -s ${fastq%R1.fastq}R2.fastq ./$R2
 done
 ```
 
 Upload your metadata file to the `data` directory, with the correct formatting:
 * Columns should read:
-```StudyID  Column2   Column3   ...```
-* Each row should be a sample, with subsequent desired information provided (RNA extraction date, etc.)
-* All values in this file should be tab-separated
+```SampleID  Column2   Column3   ...```
+* Each row should be a sample, with subsequent desired information provided (RNA extraction date, Condition, etc.)
+* This must be a tab-separated text file.
 
-Edit the `omic_config.yaml` in your `wdir()`:
-* Change the `project_id` to a unique project identifier
-* Add appropriate contrasts based on your samples under the `[diffexp][contrasts]` section
-* Add the path to your metadata file for the `omic_meta_data` and `samples` parameters
-* Change `base_dir` to your current working directory
-* Ensure you have the correct `assembly` specified
-    * Current options for this are: hg19, hg38.89 (ensembl v89) and hg38.90 (ensembl v90)
+Edit the `omic_config.yaml` in `cfRNA-seq-pipeline-Ngo-manuscript-2019`:
+* Assembly-specific parameters:
+    * Add path to your gtf file in `gtf_file` parameter
+    * Add path to the `bed_file` for your genome assembly in BED12 format
+    * Add path to pre-built `star_index` for this assembly
+    * Add path to gtf file for specific house-keeping genes you would like to look at in `exon_gtf`
+        * In our study, we looked at ACTB, GAPDH, B2M, OAZ1, PPIA and HPRT1
+    * Add path to the fasta file
+    * Add path to a tab-separated text file which has ensemble ID to gene symbol conversion
+        * Columns must be named `ensembl_gene_id` and `external_gene_name`
+* Add the path to your metadata file for the `omic_meta_data` parameters 
+* Options to be passed into downstream rules:
+    * Change the `project_id` to a unique project identifier
+    * Specify `assembly`
+        * Current options for this are: hg19, hg38.89 (ensembl v89) and hg38.90 (ensembl v90)
+    * Print GO tree: `printTree` (0 for no, 1 or yes)
+    * `FC` and `adjp`: Fold-change and FDR cutoff for GO analysis and volcano plots
+    * `linear_model`: The name of the column in your `omic_meta_data` file which you would like to run differential expression on (ex: Condition, Genotype, etc...)
+    * `sample_id`: The name of the column in your `omic_meta_data` file which includes your Sample IDs. These must match the names of your fastq files.
+    * `meta_columns_to_plot`: Columns in your `omic_meta_data` file which you would like to annotate in downstream heatmaps made through DESeq2
+    * `[diffexp][contrasts]`: The name of your contrast (this will be used to name output files for that contrast), followed by each type in the contrast listed separately. *The type you would like to use as the baseline for differential expression must be listed second*.
+    * `[pca][labels]`: The columns in your `omic_meta_data` which you would like to label your PCA plot by. Maximum 2 columns.
+    * The colors you would like to use to colour plots. More information in `omic_config.yaml`
 
 Do a dry-run of snakemake to ensure proper execution before submitting it to the cluster (in your wdir).
 
