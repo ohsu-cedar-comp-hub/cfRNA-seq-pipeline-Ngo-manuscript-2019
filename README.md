@@ -100,8 +100,10 @@ Alignment
     * Trimming of paired-end reads was performed using the trimming tool `sickle`
     * The output is located in `samples/trimmed/`
 2) Quality Analysis
-    * Trimmed reads were subject to `fastqc` quality analysis
-    * The output is located in `samples/fastqc/{sample}/{samples}_t_fastqc.zip`
+    * Trimmed reads were run through `fastqc` to check the read quality
+        * The output is located in `samples/fastqc/{sample}/{samples}_t_fastqc.zip`
+    * Trimmed reads were screened for contaminating genomic RNA using `fastqscreen`
+        * The output is located in `samples/fastqscreen/{sample}`
 3) Alignment
     * Trimmed reads were aligned to the hg38 genome assembly using `STAR`
         * We included a two pass mode flag in order to increase the number of aligned reads
@@ -109,9 +111,11 @@ Alignment
             * Output directory includes: `Aligned.sortedByCoord.out.bam`, `ReadsPerGene.out.tab`, and `Log.final.out`
     * We extracted the statistics from the `STAR` run, and placed them in a table, summarizing the results across all samples from the `Log.final.out` output of STAR
         * Output is `results/tables/{project_id}_STAR_mapping_statistics.txt`
-4) Summarizing output
-    * `htseq` and `samtools` were used to extract the gene counts for each sample, and `picard` was used to remove duplicate reads
-    * We summarize these results into 1 table, which includes the gene counts across all samples
+4) Duplicate read removal
+    * Duplicate reads were removed using `picard`, and resulting bam files were sorted using `samtools`
+5) Summarizing output
+    * `htseq` was used to measure the number of reads mapping to each feature in our genome assembly 
+    * We summarize the results for individual samples into 1 table, which includes the gene counts across all samples
     * The output is located in `data/{project_id}_counts.txt`
 
 Quality Analysis / Quality Check
@@ -125,31 +129,24 @@ Quality Analysis / Quality Check
         * Read GC
     * For more information on these, visit: http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/rseqc/_build/html/index.html#usage-information
     * Output directory: `rseqc/`
-2) QA/QC scripts to analyze the data as a whole 
+2) R scripts performed on the DESeq dataset object generated from our counts table 
     * The purpose of this analysis is to identify potential batch effects and outliers in the data
-    * The outputs to this are located in the `results` directory, and are distributed amongst 4 subdirectories, numbered `1 through 4`
-        * `1`
-            * A *boxplot* of the raw log2-transformed gene counts across all samples
-            * A *boxplot* of the loess-transformed gene counts across all samples
-            * A *scatter plot* comparing raw gene counts to loess-transformed gene counts
-            * A *density plot* of raw log2-transformed gene counts across all samples 
-            * A *density plot* of loess-transformed gene counts across all samples
-            * A *scatter plot* of the standard deviation of raw log2-transformed gene counts across all samples
-            * A *scatter plot* of the standard deviation of loess-transformed gene counts across all samples
-        * `2`
-            * A *heatmap* of all raw log2-transformed gene counts across samples
-            * A *heatmap* of all loess-transformed gene counts across samples
-                * These are generated to look for any batch effects in the data, due to date of extraction, or other factors
-            * An *MDS Plot* for all samples, generated with the raw log2-transformed gene counts
-            * An *MDS Plot* for all samples, generated with the loess-transformed gene counts
-                * These are generated to look for outliers in the data
-        * `3`
-            * *p-value histograms* for each contrast specified in the `omic_config.yaml`
-            * *q-value QC plot arrays* for each contrast specified in the `omic_config.yaml`
-        * `4`
-            * A *Heatmap* which looks at genes with a high FC and low q-value (very significant)
-                * Takes genes with a FC>1.3, and ranks those by q-value. From this, a heatmap is generated for the top *50, 100 and 200* genes in this list
-            * An *MDS Plot* which looks at the same subsets of genes as the Heatmap described above
+    * Across all samples: output located in the `results/diffexp/group/` directory
+        * `counts_violinPlot.pdf`,`counts_faceted_violinPlot.pdf`
+            * Violin plots capturing the spread of raw gene counts across all samples
+        * `rlog_counts_violinPlot.pdf`,`rlog_counts_faceted_violinPlot.pdf`
+            * Violin plots capturing the spread of regularized log counts across all samples
+        * `MDS_plot.pdf`,`MDS_table.txt`
+            * MDS plot, demonstrating how similar each sample is to one another
+        * `Heatmap_all_genes.pdf`
+            * Unbiased clustering across all measured features and samples
+        * `stdev_plot.pdf`
+            * Standard deviation of the transformed data across all samples against the mean, using the shifted logarithm transformation, the regularized log transformation and the variance stabilizing transformation
+        * `LRT_density_plot.pdf`
+            * Density plot of all normalized counts across samples of each type
+    * Across comparisons: output located in the `results/diffexp/pairwise/` directory
+        * `{contrast}.qplot.pdf`,`{contrast}.qhist.pdf`,`{contrast}.qvalue_diffexp.tsv`
+            * Additional plots testing the significance of the difference in each comparison
             
 Differential Expression Analysis (DESeq2)
 ======================
@@ -157,8 +154,6 @@ Differential Expression Analysis (DESeq2)
     * Here, we run `DESeq2` on the genecounts table, which generates an RDS object and rlog
         * This includes the DE analysis across all samples
         * Output is located in the `results/diffexp/ directory`
-    * From the dds object generated, we extract the normalized counts and generate a table with the results
-        * Output is `results/tables/{project_id}_normed_counts.txt`
 2) Generating plots
     * From the RDS object, we generate a collection of informative plots. These include:
         * *PCA Plot*
