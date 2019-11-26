@@ -221,7 +221,7 @@ write.csv(my.lda, file=filename)
 my.lda$Colour <- plyr::mapvalues(my.lda$Groups, c("HD","LuCa","MM","HCC"), c(colourHD, colourLuCa, colourMM, colourHCC))
 rownames(my.lda) <- 0:(nrow(my.lda)-1)
 my.lda <- my.lda[order(my.lda$Groups),]
-write.table(my.lda, file="../../tables/LDA_multiclass/LDA_table_for_3D_plot.txt", quote = F, sep="\t")
+write.table(my.lda, file="../../tables/LDA_multiclass/LDA_table_for_3D_plot.txt", quote = F, sep="\t", col.names = NA)
 
 #####################################################################
 # LDA LOOCV HD LuCa HCC MM using top 5 lvq genes pairwise  

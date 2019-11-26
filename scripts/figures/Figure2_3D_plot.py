@@ -1,3 +1,4 @@
+import pandas as pd
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
@@ -9,9 +10,9 @@ import sys
 from six import string_types
 import statsmodels.nonparametric.api as smnp
 
-rc('font', size = 14.173139066840525)
+rc('font', size = 5)
 rc('font', family = 'arial')
-rc('axes', labelsize = 22.67702250694484)
+rc('axes', labelsize = 8)
 
 
 def _kde_support(data, bw, gridsize, cut, clip):
@@ -57,12 +58,12 @@ def plot_3d_scatter(lda_file='LDA_table_for_3D_plot.txt', elev=21, azim=56):
     z = lda.LD3
     c = lda.Colour
 
-    fig = plt.figure(figsize = (15, 15))  # PRL default width
+    fig = plt.figure(figsize = (3.2, 3.2))
     ax1 = fig.add_subplot(111, projection = '3d')
     plt.subplots_adjust(left = 0, right = 0.90, top = 1, bottom = 0, wspace = 0.22)
-    ax1.scatter(x,y,z,c=c,marker='o',**{'edgecolors':'white','alpha':1.0,'s':500})
-    ax1.set_xlabel('\n LD1', size=22.67702250694484)
-    ax1.set_ylabel('\n LD2', size=22.67702250694484)
+    ax1.scatter(x,y,z,c=c,marker='o',**{'edgecolors':'white','alpha':1.0,'s':60})
+    ax1.set_xlabel('\n LD1', size=8)
+    ax1.set_ylabel('\n LD2', size=8)
 
     ax1.xaxis.set_rotate_label(False)
     ax1.yaxis.set_rotate_label(False)
@@ -107,16 +108,16 @@ def plot_3d_scatter(lda_file='LDA_table_for_3D_plot.txt', elev=21, azim=56):
     for group,frame in groups:
         cmap = frame.cmap.unique()[0]
         xx,yy,zz = _statsmodels_bivariate_kde(frame.LD1, frame.LD2)
-        ax1.contour(xx, yy, zz, zdir = 'z', cmap = cmap, offset=-4)
+        ax1.contour(xx, yy, zz, zdir = 'z', cmap = cmap, offset=-4, linewidths=0.5)
         ax1.contour(xx, yy, zz, zdir = 'x', offset = -5.973452472012009, cmap = cmap, linewidths=0.5)
         ax1.contour(xx, yy, zz, zdir = 'y', offset = -6.5, cmap = cmap, linewidths=0.5)
     if elev and azim != None:
         ax1.view_init(elev=elev, azim=azim)
 
-    # plt.show()
+    #plt.show()
 
-    plt.savefig('test_3d_w_super_big_points_white_edgecolor_grid.png',dpi=500)
+    plt.savefig('test_3d_small_size.png',dpi=500)
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     plot_3d_scatter()
