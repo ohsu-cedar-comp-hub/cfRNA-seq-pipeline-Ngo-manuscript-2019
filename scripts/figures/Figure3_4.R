@@ -178,6 +178,9 @@ names(data_train) <- make.names(names(data_train))
 
 # Linear discriminant analysis
 linear <- lda(Status~.,data_train)
+#histogram
+p <- predict(linear,data_train)
+p
 
 p1 <- predict(linear,data_train)$class
 tab1 <- table(Predicted = p1, Actual = data_train$Status)
@@ -242,6 +245,9 @@ names(data_train) <- make.names(names(data_train))
 
 # Linear discriminant analysis
 linear <- lda(Status~.,data_train)
+#histogram
+p <- predict(linear,data_train)
+p
 
 p1 <- predict(linear,data_train)$class
 tab1 <- table(Predicted = p1, Actual = data_train$Status)

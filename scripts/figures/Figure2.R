@@ -86,6 +86,12 @@ MM.vs.HCC_top5lvq <- rownames(LVQ_HCCvsMM$importance[order(LVQ_HCCvsMM$importanc
 MM.vs.LuCa_top5lvq <- rownames(LVQ_LuCavsMM$importance[order(LVQ_LuCavsMM$importance$MM, decreasing = TRUE),])[1:5]
 LuCa.vs.HCC_top5lvq <- rownames(LVQ_HCCvsLuCa$importance[order(LVQ_HCCvsLuCa$importance$HCC, decreasing = TRUE),])[1:5]
 
+# Import Arial type font
+library(extrafont)
+extrafont::font_import()
+extrafont::fonts()
+extrafont::loadfonts()
+
 GenerateBoxPlotOfTop5LVQGenes <- function(Data, Metadata, LVQlist, Comparison, Colors) {
   # Generate boxplots for top 5 lvq genes for across all types
   select_datac= which((row.names(Data)) %in% (LVQlist))
@@ -132,7 +138,7 @@ MM_boxplot <- GenerateBoxPlotOfTop5LVQGenes(Data = datac_sel, Metadata = metadat
 HCC_boxplot <- GenerateBoxPlotOfTop5LVQGenes(Data = datac_sel, Metadata = metadata_sel, LVQlist = HCC.vs.HD_top5lvq, 
                                              Comparison = "HD-vs-HCC", Colors = colors)
 
-pdf("Figure2_A_C.pdf", 4, 5)
+pdf("Figure2_A_C.pdf", 4, 5, useDingbats = FALSE)
 cowplot::plot_grid(LuCa_boxplot, MM_boxplot, HCC_boxplot, nrow = 3)
 dev.off()
 
@@ -183,7 +189,6 @@ select_datac= which((row.names(datac)) %in% (genes_sel))
 # Transform data to log scale and attach with metadata
 data_train <- cbind(metadata_sel,t(log(datac_sel[select_datac,]+1,2))) 
 data_train <- data_train[,-2]
-str(data_train)
 data_train$Status <- factor(data_train$Status, levels = c("HD","LuCa","MM","HCC"))
 table(data_train$Status)
 
@@ -191,6 +196,9 @@ names(data_train) <- make.names(names(data_train))
 
 # Linear discriminant analysis
 linear <- lda(Status~.,data_train)
+
+p <- predict(linear,data_train)
+p
 
 p1 <- predict(linear,data_train)$class
 tab1 <- table(Predicted = p1, Actual = data_train$Status)
@@ -200,12 +208,20 @@ sum(diag(tab1))/sum(tab1)
 Groups <- data_train$Status
 my.lda <- data.frame(p$x[,1:3], Groups)
 
+# Trained model on our training data
+# Visualization of first three components of LDA
 pl <- plot_ly(my.lda, x = ~LD1, y = ~LD2, z = ~LD3, color = ~Groups,colors = c(colourHD, colourLuCa, colourMM, colourHCC)) 
 pl
 
 dir.create("../../tables/LDA_multiclass/")
 filename = paste("../../tables/LDA_multiclass/LDA_multiclass.csv")
 write.csv(my.lda, file=filename)
+
+# Write out my.lda with colours attached to feed into our 3d plot python script "Figure2_3D_plot.py"
+my.lda$Colour <- plyr::mapvalues(my.lda$Groups, c("HD","LuCa","MM","HCC"), c(colourHD, colourLuCa, colourMM, colourHCC))
+rownames(my.lda) <- 0:(nrow(my.lda)-1)
+my.lda <- my.lda[order(my.lda$Groups),]
+write.table(my.lda, file="../../tables/LDA_multiclass/LDA_table_for_3D_plot.txt", quote = F, sep="\t")
 
 #####################################################################
 # LDA LOOCV HD LuCa HCC MM using top 5 lvq genes pairwise  
