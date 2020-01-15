@@ -52,6 +52,7 @@ rule all:
         expand("results/tables/{project_id}_STAR_mapping_statistics.txt", project_id = config['project_id']),
         expand("samples/fastqc/{sample}/{sample}_{fastq_ext}_t_fastqc.zip", sample = SAMPLES, fastq_ext = fastq_ext),
         expand("samples/fastqscreen/{sample}/{sample}_{fastq_ext}_t_screen.{fastqscreen_ext}", sample=SAMPLES, fastq_ext=fastq_ext, fastqscreen_ext=fastqscreen_ext),
+        expand("samples/insert_size/{sample}_insert_size_metrics.txt", sample = SAMPLES),
         "data/{project_id}_counts_w_stats.txt".format(project_id=config['project_id']),
         "data/{project_id}_exon_counts.txt".format(project_id = config["project_id"]),
         expand("rseqc/insertion_profile/{sample}/{sample}.insertion_profile.{ext}",sample=SAMPLES, ext=insertion_and_clipping_prof_ext),

@@ -84,6 +84,19 @@ rule star_statistics:
     script:
         "../scripts/compile_star_log.py"
 
+rule insert_size:
+    input:
+        "samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam"
+    output:
+        metrics="samples/insert_size/{sample}_insert_size_metrics.txt",
+        hist="samples/insert_size/{sample}_insert_size_histogram"
+    run:
+        picard_insert_size=config["insert_size_tool"]
+        
+        shell("java -jar {picard_insert_size} \
+               I={input} \
+               O={output.metrics} \
+               H={output.hist}")
 
 rule picard:
     input:

@@ -50,6 +50,14 @@
         "c" : 1,
         "mem":5000
     },
+    "insert_size" :
+    {
+        "J" : "insert_size",
+        "e" : "logs/insert_size/insert_size%j.err",
+        "o" : "logs/insert_size/insert_size%j.out",
+        "c" : 1,
+        "mem" : 5400
+    },
     "picard" :
     {
         "J" : "picard",

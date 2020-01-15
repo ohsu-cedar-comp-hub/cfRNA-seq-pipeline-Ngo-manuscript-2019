@@ -30,6 +30,8 @@ sickle_tool:
   tools/sickle
 picard_tool:
   tools/MarkDuplicates.jar
+insert_size_tool:
+  tools/CollectInsertSizeMetrics.jar
 
 ##########################################
 # Important project-specific paths/files
