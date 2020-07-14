@@ -75,9 +75,11 @@ genecountm_group <- merge(genecountm,metadata_group,by="PP_ID")
 genecountm_group$Status <- factor(genecountm_group$Status, levels = c("HD","MGUS","MM"))
 
 my_comparisons <- list(c("HD","MGUS"),c("MGUS","MM"),c("HD","MM"))
-colourHD <- Colors[Colors$Status=="HD",]$Colour
-colourMGUS <- Colors[Colors$Status=="MGUS",]$Colour
-colourMM <- Colors[Colors$Status=="MM",]$Colour
+colourHD <- colors[colors$Status=="HD",]$Colour
+colourMGUS <- colors[colors$Status=="MGUS",]$Colour
+colourCirr <- colors[colors$Status=="Cirr",]$Colour
+colourMM <- colors[colors$Status=="MM",]$Colour
+colourHCC <- colors[colors$Status=="HCC",]$Colour
 
 boxplot_MM <- ggplot(genecountm_group, aes(x=Status, y=counts,color=Status)) + 
   geom_boxplot(outlier.shape = NA)+

@@ -109,8 +109,8 @@ def plot_3d_scatter(lda_file='LDA_table_for_3D_plot.txt', elev=21, azim=56):
         cmap = frame.cmap.unique()[0]
         xx,yy,zz = _statsmodels_bivariate_kde(frame.LD1, frame.LD2)
         ax1.contour(xx, yy, zz, zdir = 'z', cmap = cmap, offset=-4, linewidths=0.5)
-        ax1.contour(xx, yy, zz, zdir = 'x', offset = -5.973452472012009, cmap = cmap, linewidths=0.5)
-        ax1.contour(xx, yy, zz, zdir = 'y', offset = -6.5, cmap = cmap, linewidths=0.5)
+        #ax1.contour(xx, yy, zz, zdir = 'x', offset = -5.973452472012009, cmap = cmap, linewidths=0.5)
+        #ax1.contour(xx, yy, zz, zdir = 'y', offset = -6.5, cmap = cmap, linewidths=0.5)
     if elev and azim != None:
         ax1.view_init(elev=elev, azim=azim)
 
