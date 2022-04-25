@@ -70,12 +70,6 @@ GenerateBoxplot <- function(data, target, baseline, genelist, colors) {
   
   my_comparisons <- list(c(baseline,target))
   
-  #if (target == "HCC") {
-  #  filt <- filter(filt, Target_Name != "IFITM3")
-  #} else if (target == "MM") {
-  #  filt <- filter(filt, Target_Name != "CENPE")
-  #}
-  
   p <- ggplot(filt, mapping = aes(x = Group, y = CT, color = Group)) +
     geom_boxplot() + 
     theme_bw() +
