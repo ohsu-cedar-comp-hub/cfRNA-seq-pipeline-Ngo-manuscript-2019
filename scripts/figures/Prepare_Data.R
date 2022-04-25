@@ -1,11 +1,11 @@
 # Prepare data for further analysis
 library(dplyr)
-setwd("/Users/roskamsh/Library/Mobile Documents/com~apple~CloudDocs/Desktop/cfRNA/manuscript/Re-run_updated_without_PP033/tables/")
+setwd("/Users/breesheyroskams-hieter/Desktop/cfRNA/manuscript/revised_paper_with_validation/tables/")
 
 ensCounts <- read.table("counts_table_updated.txt", header = TRUE, stringsAsFactors = FALSE)
 metadata <- read.csv("PP_metadata_keep_FINAL_updated.csv", stringsAsFactors = FALSE)
 
-# Filter ensCounts 
+# Filter ensebl counts
 ensCounts <- ensCounts[,colnames(ensCounts) %in% metadata$PP_ID]
 ensCounts <- cbind(rownames(ensCounts), ensCounts)
 colnames(ensCounts)[1] <- "gene"
@@ -14,9 +14,9 @@ rownames(ensCounts) <- NULL
 ## Keep ENS IDs
 old <- ensCounts
 ## Replace ensemble id's with gene id's
-gene_id = read.delim("/Users/roskamsh/Library/Mobile Documents/com~apple~CloudDocs/Desktop/cfRNA/biomart_ensembl_geneid.txt")
+gene_id = read.delim("/Users/breesheyroskams-hieter/Desktop/cfRNA/biomart_ensembl_geneid.txt")
 
-## Remove unique identifier .xx from heatmap data
+## Remove unique identifier .xx from gencode IDs
 ensCounts$gene <- sub("\\.[0-9]*", "", ensCounts$gene)
 iv <- match(ensCounts$gene, gene_id$ensembl_gene_id)
 head(gene_id[iv,])
@@ -46,4 +46,3 @@ RPM$gene <- sub("\\.[0-9]*", "", RPM$gene)
 # Export to a table
 write.table(RPM, file = "RPM_updated_ensIDs.txt", 
             sep="\t", row.names = FALSE, quote=F)
-
