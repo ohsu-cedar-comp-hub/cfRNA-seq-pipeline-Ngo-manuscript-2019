@@ -7,13 +7,13 @@ library(mlbench)
 library(psych)
 
 # Set working directory
-setwd("/Users/roskamsh/Desktop/cfRNA/manuscript/Updated_sample_list_w_correct_diagnosis/")
+setwd("/Users/breesheyroskams-hieter/Desktop/cfRNA/manuscript/revised_paper_with_validation/")
 
 ############################################
 # Import Data
 ############################################
 
-data <- read.csv("tables/RPM_without_dates_updated.csv",sep=",")
+data <- read.csv("tables/RPM_without_dates_updated.csv",sep=",", row.names = 1)
 metadata <- read.csv("tables/PP_metadata_keep_FINAL_updated.csv",sep = ",", stringsAsFactors = FALSE)
 
 ############################################
@@ -26,8 +26,13 @@ data$gene <- as.character(data$gene)
 # Consolidate duplicate gene names
 datam <- melt(data,id="gene")
 datac <- dcast(datam,gene~variable,fun.aggregate = mean)
+# Set rownames as gene symbols
 rownames(datac) <- datac[,1]
 datac <- datac[,-1]
+
+## Remove PP084 from analysis
+metadata <- metadata[metadata$PP_ID != "PP084",]
+datac <- datac[,colnames(datac) != "PP084"]
 
 ############################################
 # Feature Selection by lvq using caret 
@@ -88,13 +93,10 @@ RunLVQ <- function(Baseline, Target, Data, Metadata) {
   saveRDS(model, file=paste0(fname, "_model.rds"))
 }
 
-RunLVQ(Baseline = "HD", Target = "LuCa", Data = datac, Metadata = metadata)
-RunLVQ(Baseline = "HD", Target = "HCC", Data = datac, Metadata = metadata)
-RunLVQ(Baseline = "HD", Target = "MM", Data = datac, Metadata = metadata)
-RunLVQ(Baseline = "HD", Target = "MGUS", Data = datac, Metadata = metadata)
+RunLVQ(Baseline = "NC", Target = "HCC", Data = datac, Metadata = metadata)
+RunLVQ(Baseline = "NC", Target = "MM", Data = datac, Metadata = metadata)
+RunLVQ(Baseline = "NC", Target = "MGUS", Data = datac, Metadata = metadata)
 RunLVQ(Baseline = "HCC", Target = "MM", Data = datac, Metadata = metadata)
-RunLVQ(Baseline = "HCC", Target = "LuCa", Data = datac, Metadata = metadata)
-RunLVQ(Baseline = "LuCa", Target = "MM", Data = datac, Metadata = metadata)
 RunLVQ(Baseline = "MGUS", Target = "MM", Data = datac, Metadata = metadata)
 RunLVQ(Baseline = "Cirr", Target = "HCC", Data = datac, Metadata = metadata)
-RunLVQ(Baseline = "Cirr", Target = "HD", Data = datac, Metadata = metadata)
+RunLVQ(Baseline = "Cirr", Target = "NC", Data = datac, Metadata = metadata)
