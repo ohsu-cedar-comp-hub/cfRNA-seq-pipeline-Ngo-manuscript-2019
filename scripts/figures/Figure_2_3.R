@@ -1,4 +1,4 @@
-# Script to generate figure 3 and 4 for cfRNA manuscript
+# Script to generate figures 2 and 3 for cfRNA manuscript
 library(reshape2)
 library(tsne)
 library(ggplot2)
@@ -10,7 +10,7 @@ library(gridExtra)
 library(ggpubr)
 
 # Set the working directory
-setwd("/Users/breesheyroskams-hieter/Desktop/cfRNA/manuscript/revised_paper_with_validation/figures/figure3/")
+setwd("/Users/breesheyroskams-hieter/Desktop/cfRNA/manuscript/revised_paper_with_validation/figures/figure2/")
 
 ################################################
 # Import Data 
