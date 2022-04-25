@@ -1,6 +1,6 @@
 # Prepare data for further analysis
 library(dplyr)
-setwd("/Users/roskamsh/Desktop/cfRNA/manuscript/Updated_sample_list_w_correct_diagnosis/tables/")
+setwd("/Users/roskamsh/Library/Mobile Documents/com~apple~CloudDocs/Desktop/cfRNA/manuscript/Re-run_updated_without_PP033/tables/")
 
 ensCounts <- read.table("counts_table_updated.txt", header = TRUE, stringsAsFactors = FALSE)
 metadata <- read.csv("PP_metadata_keep_FINAL_updated.csv", stringsAsFactors = FALSE)
@@ -11,8 +11,10 @@ ensCounts <- cbind(rownames(ensCounts), ensCounts)
 colnames(ensCounts)[1] <- "gene"
 rownames(ensCounts) <- NULL
 
+## Keep ENS IDs
+old <- ensCounts
 ## Replace ensemble id's with gene id's
-gene_id = read.delim("/Users/roskamsh/Desktop/cfRNA/biomart_ensembl_geneid.txt")
+gene_id = read.delim("/Users/roskamsh/Library/Mobile Documents/com~apple~CloudDocs/Desktop/cfRNA/biomart_ensembl_geneid.txt")
 
 ## Remove unique identifier .xx from heatmap data
 ensCounts$gene <- sub("\\.[0-9]*", "", ensCounts$gene)
@@ -27,10 +29,21 @@ write.table(ensCounts, file = "counts_tables_geneID_updated.txt",
             sep="\t", row.names = FALSE, quote=F)
 
 # Generate RPM
-tmp <- sweep(ensCounts[,2:68], 2, colSums(ensCounts[,2:68]), '/') * 1e6
+tmp <- sweep(ensCounts[,2:67], 2, colSums(ensCounts[,2:67]), '/') * 1e6
 RPM <- data.frame(ensCounts$gene, tmp)
 colnames(RPM)[1] <- "gene"
 
 # Export to a table
 write.table(RPM, file = "RPM_updated.txt", 
             sep="\t", row.names = FALSE, quote=F)
+
+# Write RPMs for ens IDs
+tmp <- sweep(old[,2:67], 2, colSums(ensCounts[,2:67]), '/') * 1e6
+RPM <- data.frame(old$gene, tmp)
+colnames(RPM)[1] <- "gene"
+RPM$gene <- sub("\\.[0-9]*", "", RPM$gene)
+
+# Export to a table
+write.table(RPM, file = "RPM_updated_ensIDs.txt", 
+            sep="\t", row.names = FALSE, quote=F)
+
