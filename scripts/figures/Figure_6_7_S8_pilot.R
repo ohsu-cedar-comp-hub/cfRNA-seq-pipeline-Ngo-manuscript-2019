@@ -1,5 +1,4 @@
-# Script to generate plots in Figure 1, excluding the LOOCV tables, which are made separately
-
+# Figures 6, 7 and S8
 # Load libraries
 library(reshape2)
 library(ggplot2)
@@ -56,12 +55,6 @@ datac <- datac[,order(colnames(datac))]
 #######################################################
 ## LDA boxplots split by Stage, Etiology and Sex
 #######################################################
-
-# initialize variables
-Data=datac
-Metadata=metadata
-Baseline="NC"
-Target="HCC"
 
 GenerateROCforSexStageEtiology <- function(Data, Metadata, Baseline, Target, colors) {
   if (Target=="HCC") {
